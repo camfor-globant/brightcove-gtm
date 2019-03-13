@@ -11,7 +11,7 @@
   registerPlugin = videojs.registerPlugin || videojs.plugin;
   
   registerPlugin('ga', function(options) {
-    var adStateRegex, currentVideo, dataSetupOptions, defaultLabel, defaultsEventsToTrack, end, endTracked, error, eventCategory, eventLabel, eventNames, eventsToTrack, fullscreen, getEventName, href, iframe, isInAdState, loaded, parsedOptions, pause, percentsAlreadyTracked, percentsPlayedInterval, play, player, referrer, resize, seekEnd, seekStart, seeking, sendbeacon, start, startTracked, timeupdate, tracker, volumeChange,
+    var adStateRegex, currentVideo, dataSetupOptions, dataSetupParentClass, defaultLabel, defaultsEventsToTrack, end, endTracked, error, eventCategory, eventParentId, eventParentHasClass, eventLabel, eventNames, eventsToTrack, fullscreen, getEventName, href, iframe, isInAdState, loaded, parsedOptions, pause, percentsAlreadyTracked, percentsPlayedInterval, play, player, referrer, resize, seekEnd, seekStart, seeking, sendbeacon, start, startTracked, timeupdate, tracker, volumeChange,
       _this = this;
     if (options == null) {
       options = {};
@@ -23,13 +23,19 @@
       return;
     }
     player = this;
+    eventParentId = player.el().parentElement.id;
     dataSetupOptions = {};
+    dataSetupParentClass = 'class-non-found';
     if (options.data_setup) {
       parsedOptions = JSON.parse(options.data_setup);
       if (parsedOptions.ga) {
         dataSetupOptions = parsedOptions.ga;
       }
     }
+    if (options.eventParentClass) {
+      dataSetupParentClass = options.eventParentClass;
+    }
+    eventParentHasClass = player.el().parentElement.classList.contains(dataSetupParentClass) ? "1" : "0";
     defaultsEventsToTrack = ['player_load', 'video_load', 'percent_played', 'start', 'end', 'seek', 'play', 'pause', 'resize', 'volume_change', 'error', 'fullscreen'];
     eventsToTrack = options.eventsToTrack || dataSetupOptions.eventsToTrack || defaultsEventsToTrack;
     percentsPlayedInterval = options.percentsPlayedInterval || dataSetupOptions.percentsPlayedInterval || 25;
@@ -184,7 +190,9 @@
           'videoCategory': eventCategory,
           'videoAction': action,
           'videoLabel': eventLabel,
-          'event': 'videoEvent'
+          'event': 'videoEvent',
+          'parentId': eventParentId,
+          'parentHasClass': eventParentHasClass
         });
 
     };
