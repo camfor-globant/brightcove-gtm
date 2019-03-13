@@ -24,8 +24,8 @@
     }
     player = this;
     dataSetupOptions = {};
-    if (this.options()["data-setup"]) {
-      parsedOptions = JSON.parse(this.options()["data-setup"]);
+    if (options.data_setup) {
+      parsedOptions = JSON.parse(options.data_setup);
       if (parsedOptions.ga) {
         dataSetupOptions = parsedOptions.ga;
       }
